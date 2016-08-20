@@ -45,6 +45,7 @@ var bts = new BattleTS({
 
 Since BattleTS is an eventemitter you can listen for the following events
 - teamspeak.connected - The server query client is successfully connected to the teamspeak server
+- express.started - The expressjs webserver has started and is listening for connections
 - teamspeak.client.connected (client) - A client is connected to our teamspeak server.
 - battlenet.user.authenticated (profile) - A client is successfully authenticated against the battle.net api
 - battlenet.user.verified (character) - A client is successfully verified as being part of the guild/realm
