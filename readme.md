@@ -88,7 +88,7 @@ bts.on('teamspeak.connected', function(tsClient) {
 		console.log(group);
 	});
 
-})
+});
 
 bts.on('express.started', function(port, protocol){
  
