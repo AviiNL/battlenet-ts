@@ -3,13 +3,13 @@ var BattleTS = require('./battlenet-ts');
 var bts = new BattleTS({
 	url: 'https://localhost:3000',
 
-	battlenet_region: 'us',
-	battlenet_key:    '',
-	battlenet_secret: '',
+	battlenet_region: 'eu',
+	battlenet_key:    'qwe',
+	battlenet_secret: 'wqe',
 
-	ssl_ca:   './server.csr',
-	ssl_cert: './server.crt',
-	ssl_key:  './server.key',
+	ssl_ca:   '../dreamworks-ts/server.csr',
+	ssl_cert: '../dreamworks-ts/server.crt',
+	ssl_key:  '../dreamworks-ts/server.key',
 
 	teamspeak_ip:        '',
 	teamspeak_queryport: '10011',
