@@ -4,12 +4,12 @@ var bts = new BattleTS({
 	url: 'https://localhost:3000',
 
 	battlenet_region: 'eu',
-	battlenet_key:    'qwe',
-	battlenet_secret: 'wqe',
+	battlenet_key:    '',
+	battlenet_secret: '',
 
-	ssl_ca:   '../dreamworks-ts/server.csr',
-	ssl_cert: '../dreamworks-ts/server.crt',
-	ssl_key:  '../dreamworks-ts/server.key',
+	ssl_ca:   './server.csr',
+	ssl_cert: './server.crt',
+	ssl_key:  './server.key',
 
 	teamspeak_ip:        '',
 	teamspeak_queryport: '10011',
