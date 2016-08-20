@@ -1,0 +1,32 @@
+{
+  "name": "battlenet-ts",
+  "version": "0.0.1",
+  "description": "Battlenet authentication for teamspeak servers",
+  "author": "Yme-Jan Iedema",
+  "licene": "MIT",
+  "main": "battlenet-ts.js",
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/aviinl/battlenet-ts"
+  },
+  "keywords": [
+    "javascript",
+    "node",
+    "teamspeak",
+    "battle.net",
+    "teamspeak3",
+    "server query",
+    "query server",
+    "oauth2",
+    "eventemitter"
+  ],
+  "dependencies": {
+    "battlenet-api": "^0.13.0",
+    "express": "^4.14.0",
+    "node-teamspeak-api": "^1.0.0",
+    "passport": "^0.3.2",
+    "passport-bnet": "^1.2.1",
+    "request": "^2.74.0",
+    "util": "^0.10.3"
+  }
+}
