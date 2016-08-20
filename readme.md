@@ -174,3 +174,14 @@ fw.on('battlenet', function(subject, action, profile) {
 
 fw.connect();
 ```
+
+### Note from author
+I had to create a ssl certificate to be able to use the battle.net api
+```bash
+openssl genrsa -des3 -out server.key 1024
+openssl req -new -key server.key -out server.csr
+cp server.key server.key.org
+openssl rsa -in server.key.org -out server.key
+openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+rm server.key.org
+```
