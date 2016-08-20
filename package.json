@@ -1,6 +1,6 @@
 {
   "name": "battlenet-ts",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Battlenet authentication for teamspeak servers",
   "author": "Yme-Jan Iedema",
   "license": "MIT",
