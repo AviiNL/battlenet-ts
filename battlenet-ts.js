@@ -16,22 +16,23 @@
 	var framework = function (options) {
 		options = options || {};
 
-		this.url                 = options ? options.url || 'http://localhost' : 'http://localhost';
-		this.battlenet_key       = options ? options.battlenet_key || '' : '';
-		this.battlenet_secret    = options ? options.battlenet_secret || '' : '';
-		this.ssl_ca              = options ? options.ssl_ca || '' : '';
-		this.ssl_cert            = options ? options.ssl_cert || '' : '';
-		this.ssl_key             = options ? options.ssl_key || '' : '';
+		this.url                 = options.url || 'http://localhost' : 'http://localhost';
+		this.battlenet_region    = options.battlenet_region || 'us';
+		this.battlenet_key       = options.battlenet_key || '';
+		this.battlenet_secret    = options.battlenet_secret || '';
+		this.ssl_ca              = options.ssl_ca || '';
+		this.ssl_cert            = options.ssl_cert || '';
+		this.ssl_key             = options.ssl_key || '';
 
-		this.teamspeak_ip        = options ? options.teamspeak_ip || '' : '';
-		this.teamspeak_queryport = options ? options.teamspeak_queryport || '10011' : '10011';
+		this.teamspeak_ip        = options.teamspeak_ip || '';
+		this.teamspeak_queryport = options.teamspeak_queryport || '10011' : '10011';
 
-		this.teamspeak_username  = options ? options.teamspeak_username || 'superadmin' : 'superadmin';
-		this.teamspeak_password  = options ? options.teamspeak_password || '' : '';
-		this.teamspeak_botname   = options ? options.teamspeak_botname || 'SuperAdmin' : 'SuperAdmin';
+		this.teamspeak_username  = options.teamspeak_username || 'superadmin' : 'superadmin';
+		this.teamspeak_password  = options.teamspeak_password || '';
+		this.teamspeak_botname   = options.teamspeak_botname || 'SuperAdmin' : 'SuperAdmin';
 
-		this.realm_name			 = options ? options.realm_name || '' : '';
-		this.guild_name			 = options ? options.guild_name || '' : '';
+		this.realm_name			 = options.realm_name || '';
+		this.guild_name			 = options.guild_name || '';
 
 		var parsedUrl            = url.parse(this.url);
 		this.listen_port         = parsedUrl.port || (parsedUrl.protocol == 'https:' ? 443 : 80);
@@ -83,7 +84,7 @@
 
 	framework.prototype.verifyUser = function(profile) {
 		var self = this;
-		bnet.account.wow({origin: 'eu', access_token: profile.token},
+		bnet.account.wow({origin: self.battlenet_region, access_token: profile.token},
 			function(err,body,resp) {
 				if(body && body.error) {
 					console.log(body.error);
@@ -219,7 +220,8 @@
 		    clientID:     self.battlenet_key,
 		    clientSecret: self.battlenet_secret,
 		    callbackURL:  self.url + "/callback",
-		    scope:        'wow.profile'
+		    scope:        'wow.profile',
+		    region:       self.battlenet_region
 		}, function (accessToken, refreshToken, profile, done) {
 		    return done(null, accessToken, profile);
 		}));
