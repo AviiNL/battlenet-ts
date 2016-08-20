@@ -87,12 +87,14 @@
 		var self = this;
 		bnet.account.wow({origin: self.battlenet_region, access_token: profile.token},
 			function(err,body,resp) {
-				if(body && body.error) {
+				body = body || {};
+				var selectedCharacter = undefined;
+
+				if(body.error) {
 					console.log(body.error);
-					return false;
 				}
-				if(body && body.characters) {
-					var selectedCharacter = undefined;
+
+				if(body.characters) {
 					body.characters.some(function(character) {
 						if(character.realm == self.realm_name && character.guild == self.guild_name) {
 						    character.profile = profile;
@@ -102,16 +104,18 @@
 							return true;
 						}
 					});
-					if(!selectedCharacter) {
-						var error   = {};
-						error.profile  = profile;
-						error.error = 'notfound';
-						error.code  = 404;
-
-						self.emit('battlenet.user.notverified',       error);
-						self.emit('battlenet', 'user', 'notverified', error);
-					}
 				}
+
+				if(!selectedCharacter) {
+					var error   = {};
+					error.profile  = profile;
+					error.error = 'notfound';
+					error.code  = 404;
+
+					self.emit('battlenet.user.notverified',       error);
+					self.emit('battlenet', 'user', 'notverified', error);
+				}
+
 			});
 	}
 
