@@ -1,9 +1,9 @@
 {
   "name": "battlenet-ts",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Battlenet authentication for teamspeak servers",
   "author": "Yme-Jan Iedema",
-  "licene": "MIT",
+  "license": "MIT",
   "main": "battlenet-ts.js",
   "repository": {
     "type": "github",
