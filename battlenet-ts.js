@@ -16,20 +16,21 @@
 	var framework = function (options) {
 		options = options || {};
 
-		this.url                 = options.url || 'http://localhost';
+		this.url                 = options.url              || 'http://localhost';
 		this.battlenet_region    = options.battlenet_region || 'us';
-		this.battlenet_key       = options.battlenet_key || '';
+		this.battlenet_key       = options.battlenet_key    || '';
 		this.battlenet_secret    = options.battlenet_secret || '';
-		this.ssl_ca              = options.ssl_ca || '';
-		this.ssl_cert            = options.ssl_cert || '';
-		this.ssl_key             = options.ssl_key || '';
 
-		this.teamspeak_ip        = options.teamspeak_ip || '';
+		this.ssl_ca              = options.ssl_ca   || '';
+		this.ssl_cert            = options.ssl_cert || '';
+		this.ssl_key             = options.ssl_key  || '';
+
+		this.teamspeak_ip        = options.teamspeak_ip        || '';
 		this.teamspeak_queryport = options.teamspeak_queryport || '10011';
 
 		this.teamspeak_username  = options.teamspeak_username || 'superadmin';
 		this.teamspeak_password  = options.teamspeak_password || '';
-		this.teamspeak_botname   = options.teamspeak_botname || 'SuperAdmin';
+		this.teamspeak_botname   = options.teamspeak_botname  || 'SuperAdmin';
 
 		this.realm_name			 = options.realm_name || '';
 		this.guild_name			 = options.guild_name || '';
