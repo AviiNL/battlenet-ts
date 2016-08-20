@@ -3,7 +3,7 @@ var BattleTS = require('./battlenet-ts');
 var bts = new BattleTS({
 	url: 'https://localhost:3000',
 
-	battlenet_region: 'eu',
+	battlenet_region: 'us',
 	battlenet_key:    '',
 	battlenet_secret: '',
 
