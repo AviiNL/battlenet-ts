@@ -1,8 +1,4 @@
-var BattleTS = require('./battlenet-ts'),
-	Datastore    = require('nedb'),
-    db           = new Datastore({ filename: './database.db' });
-
-// I added nedb since its a pretty cool tool as a database, no need for any 3rd party software
+var BattleTS = require('./battlenet-ts');
 
 var bts = new BattleTS({
 	url: 'https://localhost:3000',
