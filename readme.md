@@ -53,7 +53,7 @@ Since BattleTS is an eventemitter you can listen for the following events
 ## Example
 
 ```javascript
-var BattleTS = require('./battlenet-ts'),
+var BattleTS = require('battlenet-ts'),
 	Datastore    = require('nedb'),
     db           = new Datastore({ filename: './database.db' });
 
