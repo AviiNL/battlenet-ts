@@ -52,6 +52,10 @@ Since BattleTS is an eventemitter you can listen for the following events
 - battlenet.user.verified (character) - A client is successfully verified as being part of the guild/realm
 - battlenet.user.notverified (error) - A client is not verified as being part of the guild/realm
 
+## Battle.net Development
+You need an account on http://dev.battle.net/ with an application
+to get the battlenet_key and battlenet_secret information
+
 ## Example
 
 ```javascript
@@ -143,6 +147,13 @@ bts.on('battlenet.user.verified', function(character) {
 	// The user is a member of our guild :)
 	// Time to give them some privilages (change group or something, add icon that represents their race/class)
 	// or whatever fancy you can come up with
+
+	// Get the character data from the guild, includes guild rank id (0,...)
+	// With the char.rank variable you could assign people that have different guild ranks
+	// in to different teamspeak groups
+	bts.getGuildMember(character, function(char) {
+		console.log(char);
+	});
 
 	// Set the group for this dbid to something that has access to more stuff
 	// Note that the group name is case insensitive

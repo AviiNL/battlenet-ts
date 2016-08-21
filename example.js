@@ -87,6 +87,13 @@ bts.on('battlenet.user.verified', function(character) {
 	// Time to give them some privilages (change group or something, add icon that represents their race/class)
 	// or whatever fancy you can come up with
 
+	// Get the character data from the guild, includes guild rank id (0,...)
+	// With the char.rank variable you could assign people that have different guild ranks
+	// in to different teamspeak groups
+	bts.getGuildMember(character, function(char) {
+		console.log(char);
+	});
+
 	// Set the group for this dbid to something that has access to more stuff
 	// Note that the group name is case insensitive
 	bts.setGroup(character.profile.cluid, "grunt");
