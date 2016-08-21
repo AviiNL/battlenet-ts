@@ -8,6 +8,7 @@ BattlenetTS allowes you to use battle.net OAuth2 to authenticate users against y
  - Manipulate users in teamspeak based on the result of the authentication
  - Send teamspeak private text messages
  - Add or remove users from teamspeak groups based on group name
+ - Get guild member information to get the rank id
 
 ## Todo
  - Select a character (if more than one found in guild) to authenticate against
