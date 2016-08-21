@@ -10,8 +10,6 @@ BattlenetTS allowes you to use battle.net OAuth2 to authenticate users against y
  - Add or remove users from teamspeak groups based on group name
 
 ## Todo
- - Get detailed guild information from the battle.net api
- - Grant groups based off the users ingame character's role
  - Select a character (if more than one found in guild) to authenticate against
 
 ## Initialization
