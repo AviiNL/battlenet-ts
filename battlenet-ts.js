@@ -175,11 +175,16 @@
 		var self = this;
 
 		self.getClient(cluid, function(err, client) {
-			var cldbid = client.cldbid;
-			self.getGroup(group, function(err, g) {
-				tsClient.send('servergroupaddclient', {'sgid' : g.sgid, 'cldbid': cldbid});
-			});
-		})
+			if(client) {
+				var cldbid = client.cldbid;
+				self.getGroup(group, function(err, g) {
+					tsClient.send('servergroupaddclient', {'sgid' : g.sgid, 'cldbid': cldbid});
+				});
+			} else {
+				self.emit('error', 'Unable to find client ['+client+'] to set group ['+ group +']');
+			}
+		});
+
 	}
 
 	framework.prototype.unsetGroup = function(cluid, group) {
@@ -188,9 +193,34 @@
 		self.getClient(cluid, function(err, client) {
 			var cldbid = client.cldbid;
 			self.getGroup(group, function(err, g) {
-				tsClient.send('servergroupdelclient', {'sgid' : g.sgid, 'cldbid': cldbid});
+				try {		
+					tsClient.send('servergroupdelclient', {'sgid' : g.sgid, 'cldbid': cldbid});
+				} catch(ex) {
+					console.log(ex);
+				}
 			});
 		})
+	}
+
+	framework.prototype.getGuildInfo = function(cb) {
+		var self = this;
+
+		bnet.wow.guild.members({origin: self.battlenet_region, realm: self.realm_name, name: self.guild_name}, {apikey: self.battlenet_key},
+			function(err,resp,body) {
+				if(cb) cb(resp);
+			});
+	}
+
+	framework.prototype.getGuildMember = function(character, cb) {
+		var self = this;
+
+		self.getGuildInfo(function(data) {
+			data.members.some(function(_char) {
+				if(_char.character.name === character.name) {
+					if(cb) cb(_char);
+				}
+			})
+		});
 	}
 
 	// Private functions
@@ -208,7 +238,7 @@
 					// send a command every 5 minutes to avoid losing connectin
 					setInterval(function() {
 						tsClient.send('clientlist', function(err, resp, req) {});
-					}, ((1000*60)*5))
+					}, ((1000*60)*5));
 				})
 			});
 	}
