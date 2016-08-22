@@ -85,7 +85,7 @@
 		return this.realm_name;
 	}
 
-	framework.prototype.verifyUser = function(profile) {
+	framework.prototype.verifyUser = function(profile, characterName) {
 		var self = this;
 		bnet.account.wow({origin: self.battlenet_region, access_token: profile.token},
 			function(err,body,resp) {
@@ -98,7 +98,7 @@
 
 				if(body.characters) {
 					body.characters.some(function(character) {
-						if(character.realm == self.realm_name && character.guild == self.guild_name) {
+						if(character.realm == self.realm_name && character.guild == self.guild_name && (!characterName || characterName.toLowerCase() === character.name.toLowerCase())) {
 						    character.profile = profile;
 							self.emit('battlenet.user.verified',       character);
 							self.emit('battlenet', 'user', 'verified', character);
