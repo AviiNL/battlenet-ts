@@ -229,6 +229,25 @@
 		return client_table[clid];
 	}
 
+	framework.prototype.getCharacters = function(profile, cb) {
+		var self = this;
+		bnet.account.wow({origin: self.battlenet_region, access_token: profile.token},
+			function(err,body,resp) {
+				body = body || {};
+				var characters = [];
+				if(body.characters) {
+					body.characters.forEach(function(character) {
+						if(character.realm == self.realm_name && character.guild == self.guild_name) {
+							characters.push(character);
+						}
+					});
+				}
+
+				if(cb) cb(characters);
+
+			});
+	}
+
 	// Private functions
 	function connectTeamspeak(self) {
 		tsClient.api.login( { client_login_name: self.teamspeak_username, client_login_password: self.teamspeak_password },
