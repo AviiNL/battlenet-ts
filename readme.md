@@ -10,10 +10,8 @@ BattlenetTS allowes you to use battle.net OAuth2 to authenticate users against y
  - Add or remove users from teamspeak groups based on group name
  - Get guild member information to get the rank id
  - Listen for incoming chat messages that are sent to the bot
-
-## Todo
- - Select a character (if more than one found in guild) to authenticate against
-
+ - Get a list of characters the account has in the guild
+ 
 ## Initialization
 
 ```javascript
@@ -122,7 +120,7 @@ bts.on('teamspeak.client.connected', function(client) {
 		// profile.clid
 		// profile.cluid
 		if (profile) {
-			bts.verifyUser(profile);
+			bts.verifyUser(profile, storedCharacterName); // second parameter is optional to automatically determine the character name
 		} else {
 			// no profile found, send auth url
 			bts.send(client, 'Hello there, Please click [url=' + bts.getAuthUrl(clid, cluid) + ']here[/url] to authenticate');

@@ -60,7 +60,7 @@ bts.on('teamspeak.client.connected', function(client) {
 		// profile.clid
 		// profile.cluid
 		if (profile) {
-			bts.verifyUser(profile);
+			bts.verifyUser(profile, storedCharacterName); // second parameter is optional to automatically determine the character name
 		} else {
 			// no profile found, send auth url
 			bts.send(client, 'Hello there, Please click [url=' + bts.getAuthUrl(clid, cluid) + ']here[/url] to authenticate');
