@@ -13,6 +13,8 @@
 	    tsClient     = new TeamSpeak('avii.nl', 10011),
 	    app          = express();
 
+    var client_table= {};
+
 	var framework = function (options) {
 		options = options || {};
 
@@ -223,6 +225,10 @@
 		});
 	}
 
+	framework.prototype.getCluid = function(clid) {
+		return client_table[clid];
+	}
+
 	// Private functions
 	function connectTeamspeak(self) {
 		tsClient.api.login( { client_login_name: self.teamspeak_username, client_login_password: self.teamspeak_password },
@@ -235,7 +241,7 @@
 					self.emit('teamspeak', 'connected');
 					self.teamspeak_connected = true;
 
-					// send a command every 5 minutes to avoid losing connectin
+					// send a command every 5 minutes to avoid losing connection
 					setInterval(function() {
 						tsClient.send('clientlist', function(err, resp, req) {});
 					}, ((1000*60)*5));
@@ -244,9 +250,25 @@
 	}
 
 	function registerTeamspeakListeners(self) {
+		
 		tsClient.on('notify.cliententerview', function(resp, data) {
+
+			for (var key in client_table) {
+			    if(client_table[key] === cluid) {
+			    	delete client_table[key];
+			    }
+			}
+
+			client_table[data.clid] = data.client_unique_identifier;
+
 			self.emit('teamspeak.client.connected',       data);
 			self.emit('teamspeak', 'client', 'connected', data);
+		});
+		tsClient.on('notify.textmessage', function(resp, data) {
+			if(data.invokername !== self.teamspeak_botname) {
+				self.emit('teamspeak.chat.received',       data.invokerid, data.msg);
+				self.emit('teamspeak', 'chat', 'received', data.invokerid, data.msg);
+			}
 		})
 	}
 

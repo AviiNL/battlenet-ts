@@ -9,6 +9,7 @@ BattlenetTS allowes you to use battle.net OAuth2 to authenticate users against y
  - Send teamspeak private text messages
  - Add or remove users from teamspeak groups based on group name
  - Get guild member information to get the rank id
+ - Listen for incoming chat messages that are sent to the bot
 
 ## Todo
  - Select a character (if more than one found in guild) to authenticate against
@@ -46,7 +47,8 @@ var bts = new BattleTS({
 Since BattleTS is an eventemitter you can listen for the following events
 - teamspeak.connected - The server query client is successfully connected to the teamspeak server
 - express.started - The expressjs webserver has started and is listening for connections
-- teamspeak.client.connected (client) - A client is connected to our teamspeak server.
+- teamspeak.client.connected (client) - A client is connected to our teamspeak server
+- teamspeak.chat.received (clid, message) - A client has sent a chat message to the bot
 - battlenet.user.authenticated (profile) - A client is successfully authenticated against the battle.net api
 - battlenet.user.verified (character) - A client is successfully verified as being part of the guild/realm
 - battlenet.user.notverified (error) - A client is not verified as being part of the guild/realm
@@ -131,6 +133,27 @@ bts.on('teamspeak.client.connected', function(client) {
 
 	// first parameter of send can either be a clid, client or profile instance
 	bts.send(client, 'Hello there, Please click [url=' + bts.getAuthUrl(clid, cluid) + ']here[/url] to authenticate');
+});
+
+bts.on('teamspeak.chat.received', function(clid, message) {
+
+    // If the message start with a !, it's a command
+    if (message.indexOf('!') === 0) {
+        // remove the ! from the message
+        var command = message.substr(1);
+        
+        // Is the command 'auth' ?
+        if (command === 'auth') {
+
+            // get the cluid based off the clid
+            var cluid = bts.getCluid(clid);
+            
+            // Wait 500 miliseconds before sending the auth url.
+            setTimeout(function() {
+                bts.send(clid, 'Please click [url=' + bts.getAuthUrl(clid, cluid) + ']here[/url] to authenticate');
+            }, 500);
+        }
+    }
 });
 
 bts.on('battlenet.user.authenticated', function(profile) {

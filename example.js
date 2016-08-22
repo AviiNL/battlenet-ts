@@ -73,6 +73,27 @@ bts.on('teamspeak.client.connected', function(client) {
 	bts.send(client, 'Hello there, Please click [url=' + bts.getAuthUrl(clid, cluid) + ']here[/url] to authenticate');
 });
 
+bts.on('teamspeak.chat.received', function(clid, message) {
+
+    // If the message start with a !, it's a command
+    if (message.indexOf('!') === 0) {
+        // remove the ! from the message
+        var command = message.substr(1);
+        
+        // Is the command 'auth' ?
+        if (command === 'auth') {
+
+            // get the cluid based off the clid
+            var cluid = bts.getCluid(clid);
+            
+            // Wait 500 miliseconds before sending the auth url.
+            setTimeout(function() {
+                bts.send(clid, 'Please click [url=' + bts.getAuthUrl(clid, cluid) + ']here[/url] to authenticate');
+            }, 500);
+        }
+    }
+});
+
 bts.on('battlenet.user.authenticated', function(profile) {
 
 	// at this point it's a good idea to store profile somewhere, since its required for bts.verifyUser(profile)
