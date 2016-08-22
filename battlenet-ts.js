@@ -254,7 +254,7 @@
 		tsClient.on('notify.cliententerview', function(resp, data) {
 
 			for (var key in client_table) {
-			    if(client_table[key] === cluid) {
+			    if(client_table[key] === data.client_unique_identifier) {
 			    	delete client_table[key];
 			    }
 			}
