@@ -123,7 +123,7 @@
 
 	framework.prototype.getGroups = function(cb) {
 		tsClient.send('servergrouplist', function(err,res) {
-			if(cb) cb(err, res.data);
+			if (cb) cb(err, res.data);
 		});
 	}
 
@@ -143,7 +143,7 @@
 					}
 				}
 			})
-			if(cb) cb(err, foundGroup);
+			if (cb) cb(err, foundGroup);
 		});
 	}
 
@@ -169,7 +169,7 @@
 					}
 				}
 			});
-			if(cb) cb(err, foundClient);
+			if (cb) cb(err, foundClient);
 		});
 	}
 
@@ -209,19 +209,27 @@
 
 		bnet.wow.guild.members({origin: self.battlenet_region, realm: self.realm_name, name: self.guild_name}, {apikey: self.battlenet_key},
 			function(err,resp,body) {
-				if(cb) cb(resp);
+				if(resp.members) {
+					if (cb) cb(undefined, resp);
+				} else {
+					if (cb) cb(resp);
+				}
 			});
 	}
 
 	framework.prototype.getGuildMember = function(character, cb) {
 		var self = this;
 
-		self.getGuildInfo(function(data) {
-			data.members.some(function(_char) {
-				if(_char.character.name === character.name) {
-					if(cb) cb(_char);
-				}
-			})
+		self.getGuildInfo(function(err, data) {
+			if(data.members) {
+				data.members.some(function(_char) {
+					if(_char.character.name === character.name) {
+						if (cb) cb(undefined, _char);
+					}
+				});
+			} else {
+				if (cb) cb(err);
+			}
 		});
 	}
 
@@ -243,7 +251,7 @@
 					});
 				}
 
-				if(cb) cb(characters);
+				if (cb) cb(undefined, characters);
 
 			});
 	}
