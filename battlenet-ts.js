@@ -183,7 +183,7 @@
 					tsClient.send('servergroupaddclient', {'sgid' : g.sgid, 'cldbid': cldbid});
 				});
 			} else {
-				self.emit('error', 'Unable to find client ['+client+'] to set group ['+ group +']');
+				self.emit('error', 'Unable to find client ['+cluid+'] to set group ['+ group +']');
 			}
 		});
 
