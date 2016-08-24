@@ -10,9 +10,9 @@
 		fs           = require('fs'),
 		bnet         = require('battlenet-api')(),
 		BnetStrategy = require('passport-bnet').Strategy;
-	    tsClient     = new TeamSpeak('avii.nl', 10011),
 	    app          = express();
 
+	var tsClient;
     var client_table= {};
 
 	var framework = function (options) {
@@ -43,6 +43,7 @@
 		delete parsedUrl;
 
 		this.teamspeak_connected = false;
+		tsClient = new TeamSpeak(this.teamspeak_ip, this.teamspeak_queryport);
 	}
 	util.inherits(framework, events.EventEmitter);
 
@@ -93,7 +94,7 @@
 				var selectedCharacter = undefined;
 
 				if(body.error) {
-					console.log(body.error);
+					self.emit('error', body.error);
 				}
 
 				if(body.characters) {
@@ -183,7 +184,7 @@
 					tsClient.send('servergroupaddclient', {'sgid' : g.sgid, 'cldbid': cldbid});
 				});
 			} else {
-				self.emit('error', 'Unable to find client ['+cluid+'] to set group ['+ group +']');
+				self.emit('error', 'Unable to find client ['+cluid+'] to set group ['+ group +']', err);
 			}
 		});
 
