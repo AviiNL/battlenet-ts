@@ -58,7 +58,7 @@ to get the battlenet_key and battlenet_secret information
 ## Example
 
 ```javascript
-var BattleTS = require('battlenet-ts');
+var BattleTS = require('./battlenet-ts');
 
 var bts = new BattleTS({
 	url: 'https://localhost:3000',
@@ -171,7 +171,7 @@ bts.on('battlenet.user.verified', function(character) {
 	// Get the character data from the guild, includes guild rank id (0,...)
 	// With the char.rank variable you could assign people that have different guild ranks
 	// in to different teamspeak groups
-	bts.getGuildMember(character, function(char) {
+	bts.getGuildMember(character, function(err, char) {
 		console.log(char);
 	});
 
