@@ -48,8 +48,8 @@
 
 	// Public functions
 	framework.prototype.connect = function () {
-		registerTeamspeakListeners(this);
 		connectTeamspeak(this);
+		registerTeamspeakListeners(this);
 		initiatePassport(this);
 		registerExpressAuth(this);
 		registerExpressCallback(this);
