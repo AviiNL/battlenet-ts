@@ -150,7 +150,7 @@
 	framework.prototype.getClient = function(clid, cb) {
 		var self = this;
 		var command = "clientlist";
-		if(isNaN(parseFloat(cluid))) {
+		if(isNaN(parseFloat(clid))) {
 			command = "clientdblist";
 		}
 
