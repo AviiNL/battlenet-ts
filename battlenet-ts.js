@@ -3,13 +3,13 @@
 	    util         = require("util"),
         events       = require('events'),
 	    express      = require('express'),
-		passport     = require('passport');
+		passport     = require('passport'),
 		http         = require('http'),
 		https        = require('https'),
 		url          = require('url'),
 		fs           = require('fs'),
 		bnet         = require('battlenet-api')(),
-		BnetStrategy = require('passport-bnet').Strategy;
+		BnetStrategy = require('passport-bnet').Strategy,
 	    app          = express();
 
 	var tsClient;
@@ -43,7 +43,6 @@
 		delete parsedUrl;
 
 		this.teamspeak_connected = false;
-		tsClient = new TeamSpeak(this.teamspeak_ip, this.teamspeak_queryport);
 	}
 	util.inherits(framework, events.EventEmitter);
 
@@ -148,7 +147,7 @@
 		});
 	}
 
-	framework.prototype.getClient = function(cluid, cb) {
+	framework.prototype.getClient = function(clid, cb) {
 		var self = this;
 		var command = "clientlist";
 		if(isNaN(parseFloat(cluid))) {
@@ -158,30 +157,27 @@
 		tsClient.send(command, function(err,resp) {
 			var foundClient = undefined;
 			resp.data.some(function(client) {
-				if(isNaN(parseFloat(cluid))) {
-					if(client.client_unique_identifier === cluid) {
-						foundClient = { nickname: client.client_nickname, cldbid: client.cldbid };
-						return true;
-					}
-				} else {
-					if (client.clid == cluid) {
-						foundClient = { nickname: client.client_nickname, cldbid: client.client_database_id };
-						return true;
-					}
+				if (client.clid == clid) {
+					foundClient = { nickname: client.client_nickname, cldbid: client.client_database_id };
+					return true;
 				}
 			});
 			if (cb) cb(err, foundClient);
 		});
 	}
 
-	framework.prototype.setGroup = function(cluid, group) {
+	framework.prototype.setGroup = function(clid, group) {
 		var self = this;
 
-		self.getClient(cluid, function(err, client) {
+		self.getClient(clid, function(err, client) {
 			if(client) {
 				var cldbid = client.cldbid;
 				self.getGroup(group, function(err, g) {
-					tsClient.send('servergroupaddclient', {'sgid' : g.sgid, 'cldbid': cldbid});
+					if(!g) {
+						self.emit('error', Unable to find group ['+ group +'], err);
+					} else {
+						tsClient.send('servergroupaddclient', {'sgid': g.sgid, 'cldbid': cldbid});
+					}
 				});
 			} else {
 				self.emit('error', 'Unable to find client ['+cluid+'] to set group ['+ group +']', err);
@@ -190,10 +186,10 @@
 
 	}
 
-	framework.prototype.unsetGroup = function(cluid, group) {
+	framework.prototype.unsetGroup = function(clid, group) {
 		var self = this;
 
-		self.getClient(cluid, function(err, client) {
+		self.getClient(clid, function(err, client) {
 			var cldbid = client.cldbid;
 			self.getGroup(group, function(err, g) {
 				try {		
@@ -259,6 +255,7 @@
 
 	// Private functions
 	function connectTeamspeak(self) {
+		tsClient = new TeamSpeak(self.teamspeak_ip, self.teamspeak_queryport);
 		tsClient.api.login( { client_login_name: self.teamspeak_username, client_login_password: self.teamspeak_password },
 			function (err, resp, req) {
 				tsClient.api.use({sid: 1}, function(err,resp,req) {
