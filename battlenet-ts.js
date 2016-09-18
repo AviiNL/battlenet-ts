@@ -174,7 +174,7 @@
 				var cldbid = client.cldbid;
 				self.getGroup(group, function(err, g) {
 					if(!g) {
-						self.emit('error', Unable to find group ['+ group +'], err);
+						self.emit('error', 'Unable to find group ['+ group +'], err);
 					} else {
 						tsClient.send('servergroupaddclient', {'sgid': g.sgid, 'cldbid': cldbid});
 					}
