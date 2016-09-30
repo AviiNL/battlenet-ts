@@ -197,6 +197,10 @@
         var self = this;
 
         self.getClient(clid, function (err, client) {
+            if(err) {
+                console.log(err);
+                return;
+            }
             if (client) {
                 var cldbid = client.cldbid;
                 self.getGroup(group, function (err, g) {
