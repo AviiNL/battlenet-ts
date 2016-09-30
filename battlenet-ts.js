@@ -120,11 +120,8 @@
                     self.emit('error', body.error);
                 }
 
-                console.log(body.characters);
-
                 if (body.characters) {
                     body.characters.some(function (character) {
-                        console.log(self.realm_name.indexOf(character.realm));
                         if (self.realm_name.indexOf(character.realm) > -1 && character.guild === self.guild_name && (!characterName || characterName.toLowerCase() === character.name.toLowerCase())) {
                             character.profile = profile;
                             self.emit('battlenet.user.verified', character);
