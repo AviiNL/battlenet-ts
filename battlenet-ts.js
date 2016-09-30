@@ -86,8 +86,8 @@
             }
 
             tsClient.send('clientpoke', {
-                'target':     clid,
-                'msg':        msg
+                'target': clid,
+                'msg':    msg
             });
         } else {
             throw "Teamspeak is not connected, unable to send messages";
@@ -216,6 +216,14 @@
         var self = this;
 
         self.getClient(clid, function (err, client) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (!client) {
+                console.log("client [" + clid + "] not found");
+                return;
+            }
             var cldbid = client.cldbid;
             self.getGroup(group, function (err, g) {
                 try {
