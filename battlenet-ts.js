@@ -78,6 +78,22 @@
         }
     };
 
+    framework.prototype.poke = function (clid, msg) {
+        var self = this;
+        if (self.teamspeak_connected) {
+            if (clid instanceof Object) {
+                clid = clid.clid;
+            }
+
+            tsClient.send('clientpoke', {
+                'target':     clid,
+                'msg':        msg
+            });
+        } else {
+            throw "Teamspeak is not connected, unable to send messages";
+        }
+    };
+
     framework.prototype.getAuthUrl = function (clid, cluid) {
         return this.url + '/auth/' + clid + '/' + encodeURIComponent(cluid);
     };
