@@ -163,15 +163,10 @@
     };
 
     framework.prototype.getClient = function (clid, cb) {
-        var command = "clientlist";
-        if (isNaN(parseFloat(clid))) {
-            command = "clientdblist";
-        }
-
         /**
          * @var {{string}} client.client_database_id
          */
-        tsClient.send(command, function (err, resp) {
+        tsClient.send("clientlist", function (err, resp) {
             var foundClient = null;
             resp.data.some(function (client) {
                 if (client.clid === clid) {
