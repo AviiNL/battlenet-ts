@@ -35,7 +35,7 @@
         this.teamspeak_botname  = options.teamspeak_botname || 'SuperAdmin';
 
         // Make sure it's an array
-        if (!(Object.prototype.toString.call(options.realm_name) === '[object Array]')) {
+        if (typeof options.realm_name === 'string') {
             options.realm_name = [options.realm_name];
         }
 
@@ -43,12 +43,12 @@
         this.guild_name = options.guild_name || '';
 
         var parsedUrl    = url.parse(this.url);
-        this.listen_port = parsedUrl.port || (parsedUrl.protocol == 'https:' ? 443 : 80);
+        this.listen_port = parsedUrl.port || (parsedUrl.protocol === 'https:' ? 443 : 80);
         this.protocol    = parsedUrl.protocol.slice(0, -1);
-        delete parsedUrl;
 
         this.teamspeak_connected = false;
-    }
+    };
+
     util.inherits(framework, events.EventEmitter);
 
     // Public functions
@@ -59,7 +59,7 @@
         registerExpressAuth(this);
         registerExpressCallback(this);
         startExpress(this);
-    }
+    };
 
     framework.prototype.send = function (clid, msg) {
         var self = this;
@@ -76,26 +76,29 @@
         } else {
             throw "Teamspeak is not connected, unable to send messages";
         }
-    }
+    };
 
     framework.prototype.getAuthUrl = function (clid, cluid) {
         return this.url + '/auth/' + clid + '/' + encodeURIComponent(cluid);
-    }
+    };
 
     framework.prototype.getGuildName = function () {
         return this.guild_name;
-    }
+    };
 
     framework.prototype.getRealmName = function () {
         return this.realm_name;
-    }
+    };
 
+    /**
+     * @var {{object}} body.characters
+     */
     framework.prototype.verifyUser = function (profile, characterName) {
         var self = this;
         bnet.account.wow({origin: self.battlenet_region, access_token: profile.token},
-            function (err, body, resp) {
-                body                  = body || {};
-                var selectedCharacter = undefined;
+            function (err, body) {
+                body = body || {};
+                var selectedCharacter;// = undefined;
 
                 if (body.error) {
                     self.emit('error', body.error);
@@ -103,7 +106,8 @@
 
                 if (body.characters) {
                     body.characters.some(function (character) {
-                        if (self.realm_name.indexOf(character.realm) > -1 && character.guild == self.guild_name && (!characterName || characterName.toLowerCase() === character.name.toLowerCase())) {
+                        console.log(self.realm_name.indexOf(character.realm));
+                        if (self.realm_name.indexOf(character.realm) > -1 && character.guild === self.guild_name && (!characterName || characterName.toLowerCase() === character.name.toLowerCase())) {
                             character.profile = profile;
                             self.emit('battlenet.user.verified', character);
                             self.emit('battlenet', 'user', 'verified', character);
@@ -124,17 +128,19 @@
                 }
 
             });
-    }
+    };
 
     framework.prototype.getGroups = function (cb) {
         tsClient.send('servergrouplist', function (err, res) {
-            if (cb) cb(err, res.data);
+            if (cb) {
+                cb(err, res.data);
+            }
         });
-    }
+    };
 
     framework.prototype.getGroup = function (groupname, cb) {
         tsClient.send('servergrouplist', function (err, res) {
-            var foundGroup = undefined;
+            var foundGroup = null;
             res.data.some(function (group) {
                 if (typeof groupname === 'string') {
                     if (group.name.toLowerCase() === groupname.toLowerCase()) {
@@ -147,29 +153,35 @@
                         return true;
                     }
                 }
-            })
-            if (cb) cb(err, foundGroup);
+            });
+            if (cb) {
+                cb(err, foundGroup);
+            }
         });
-    }
+    };
 
     framework.prototype.getClient = function (clid, cb) {
-        var self    = this;
         var command = "clientlist";
         if (isNaN(parseFloat(clid))) {
             command = "clientdblist";
         }
 
+        /**
+         * @var {{string}} client.client_database_id
+         */
         tsClient.send(command, function (err, resp) {
-            var foundClient = undefined;
+            var foundClient = null;
             resp.data.some(function (client) {
-                if (client.clid == clid) {
+                if (client.clid === clid) {
                     foundClient = {nickname: client.client_nickname, cldbid: client.client_database_id};
                     return true;
                 }
             });
-            if (cb) cb(err, foundClient);
+            if (cb) {
+                cb(err, foundClient);
+            }
         });
-    }
+    };
 
     framework.prototype.setGroup = function (clid, group) {
         var self = this;
@@ -185,11 +197,10 @@
                     }
                 });
             } else {
-                self.emit('error', 'Unable to find client [' + cluid + '] to set group [' + group + ']', err);
+                self.emit('error', 'Unable to find client [' + clid + '] to set group [' + group + ']', err);
             }
         });
-
-    }
+    };
 
     framework.prototype.unsetGroup = function (clid, group) {
         var self = this;
@@ -203,8 +214,8 @@
                     console.log(ex);
                 }
             });
-        })
-    }
+        });
+    };
 
     framework.prototype.getGuildInfo = function (cb) {
         var self = this;
@@ -216,12 +227,16 @@
             }, {apikey: self.battlenet_key},
             function (err, resp, body) {
                 if (resp.members) {
-                    if (cb) cb(undefined, resp);
+                    if (cb) {
+                        cb(undefined, resp);
+                    }
                 } else {
-                    if (cb) cb(resp);
+                    if (cb) {
+                        cb(resp);
+                    }
                 }
             });
-    }
+    };
 
     framework.prototype.getGuildMember = function (character, cb) {
         var self = this;
@@ -237,11 +252,11 @@
                 if (cb) cb(err);
             }
         });
-    }
+    };
 
     framework.prototype.getCluid = function (clid) {
         return client_table[clid];
-    }
+    };
 
     framework.prototype.getCharacters = function (profile, cb) {
         var self = this;
@@ -257,10 +272,11 @@
                     });
                 }
 
-                if (cb) cb(undefined, characters);
-
+                if (cb) {
+                    cb(undefined, characters);
+                }
             });
-    }
+    };
 
     // Private functions
     function connectTeamspeak(self) {
@@ -280,12 +296,15 @@
                         tsClient.send('clientlist', function (err, resp, req) {
                         });
                     }, ((1000 * 60) * 5));
-                })
+                });
             });
     }
 
     function registerTeamspeakListeners(self) {
 
+        /** @var {{string}} data.client_unique_identifier */
+        /** @var {{string}} data.invokername */
+        /** @var {{string}} data.invokerid */
         tsClient.on('notify.cliententerview', function (resp, data) {
 
             for (var key in client_table) {
@@ -304,7 +323,7 @@
                 self.emit('teamspeak.chat.received', data.invokerid, data.msg);
                 self.emit('teamspeak', 'chat', 'received', data.invokerid, data.msg);
             }
-        })
+        });
     }
 
     function initiatePassport(self) {
