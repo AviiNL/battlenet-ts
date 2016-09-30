@@ -197,7 +197,7 @@
         var self = this;
 
         self.getClient(clid, function (err, client) {
-            if(err) {
+            if (err) {
                 console.log(err);
                 return;
             }
@@ -288,11 +288,15 @@
         var self = this;
         bnet.account.wow({origin: self.battlenet_region, access_token: profile.token},
             function (err, body, resp) {
+                if (err) {
+                    cb(err);
+                    self.emit('error', err);
+                }
                 body           = body || {};
                 var characters = [];
                 if (body.characters) {
                     body.characters.forEach(function (character) {
-                        if (character.realm == self.realm_name && character.guild == self.guild_name) {
+                        if (self.realm_name.indexOf(character.realm) > -1 && character.guild == self.guild_name) {
                             characters.push(character);
                         }
                     });
