@@ -104,6 +104,8 @@
                     self.emit('error', body.error);
                 }
 
+                console.log(body.characters);
+
                 if (body.characters) {
                     body.characters.some(function (character) {
                         console.log(self.realm_name.indexOf(character.realm));
@@ -245,11 +247,15 @@
             if (data.members) {
                 data.members.some(function (_char) {
                     if (_char.character.name === character.name) {
-                        if (cb) cb(undefined, _char);
+                        if (cb) {
+                            cb(undefined, _char);
+                        }
                     }
                 });
             } else {
-                if (cb) cb(err);
+                if (cb) {
+                    cb(err);
+                }
             }
         });
     };
